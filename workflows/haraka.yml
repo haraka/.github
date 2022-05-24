@@ -1,5 +1,5 @@
 
-name: Haraka Project CI
+name: Haraka CI
 
 on:
   push:
@@ -24,4 +24,4 @@ jobs:
   codeql:
     runs-on: ubuntu-latest
     steps:
-    - uses: ./.github/workflows/codeql
+      - uses: ./.github/workflows/codeql
