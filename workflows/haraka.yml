@@ -2,7 +2,6 @@
 name: Haraka CI
 
 on:
-  push:
   workflow_call:
 
 env:
@@ -25,3 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: ./.github/workflows/codeql
+
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/publish

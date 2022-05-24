@@ -2,7 +2,6 @@
 name: Haraka Project CI
 
 on:
-  push:
   workflow_call:
 
 env:
