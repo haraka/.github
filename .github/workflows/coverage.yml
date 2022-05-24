@@ -24,8 +24,10 @@ jobs:
 
     - name: run coverage
       run: |
-        npm install --no-save nyc codecov
+        npm install --no-save nyc
         npx nyc --reporter=lcov npm test
+      env:
+        NODE_ENV: cov
 
     - name: codecov
       uses: codecov/codecov-action@v2
