@@ -1,4 +1,3 @@
-
 name: Test Coverage
 
 on:
@@ -22,6 +21,7 @@ jobs:
         fetch-depth: 1
 
     - run: npm install
+
     - name: run coverage
       run: |
         npm install --no-save nyc codecov
@@ -29,8 +29,6 @@ jobs:
 
     - name: codecov
       uses: codecov/codecov-action@v2
-      with:
-        verbose: false
 
     - name: Coveralls
       uses: coverallsapp/github-action@master
