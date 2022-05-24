@@ -15,8 +15,6 @@ jobs:
         name: Node ${{ env.node-version }}
         with:
           node-version: ${{ env.node-version }}
-          registry-url: https://registry.npmjs.org/
-
       - uses: actions/checkout@v3
       - run: npm install
       - run: npm test
