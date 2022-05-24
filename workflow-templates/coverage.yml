@@ -2,37 +2,11 @@
 name: Test Coverage
 
 on:
-  workflow_call:
+  push:
 
 env:
   CI: true
-  node-version: 16
 
 jobs:
   coverage:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/setup-node@v3
-      name: Node ${{ env.node-version }}
-      with:
-        node-version: ${{ env.node-version }}
-
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 1
-
-    - run: npm install
-    - name: run coverage
-      run: |
-        npm install --no-save nyc codecov
-        npx nyc --reporter=lcov npm test
-
-    - name: codecov
-      uses: codecov/codecov-action@v2
-      with:
-        verbose: false
-
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
+    uses: haraka/.github/.github/workflows/coverage.yml@master
