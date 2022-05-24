@@ -1,6 +1,6 @@
 {
-    "name": "Haraka Project Workflow",
-    "description": "Haraka Project CI starter workflow.",
+    "name": "Haraka CI",
+    "description": "Haraka CI Workflow, Lint, Cover, Test.",
     "iconName": "haraka-icon",
     "categories": [
         "JavaScript"
