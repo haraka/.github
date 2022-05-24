@@ -1,0 +1,12 @@
+{
+    "name": "Haraka Lint",
+    "description": "Haraka Project Lint Workflow.",
+    "iconName": "haraka-icon",
+    "categories": [
+        "JavaScript"
+    ],
+    "filePatterns": [
+        "package.json$",
+        ".*\\.md$"
+    ]
+}

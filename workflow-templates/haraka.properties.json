@@ -1,0 +1,12 @@
+{
+    "name": "Haraka Project Workflow",
+    "description": "Haraka Project CI starter workflow.",
+    "iconName": "haraka-icon",
+    "categories": [
+        "JavaScript"
+    ],
+    "filePatterns": [
+        "package.json$",
+        ".*\\.md$"
+    ]
+}
