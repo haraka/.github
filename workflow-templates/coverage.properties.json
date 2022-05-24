@@ -1,9 +1,9 @@
 {
-    "name": "Code Coverage Workflow",
-    "description": "Haraka Project CI Code Coverage Workflow.",
+    "name": "Haraka Code Coverage",
+    "description": "Haraka Project Code Coverage",
     "iconName": "haraka-icon",
     "categories": [
-        "js"
+        "JavaScript"
     ],
     "filePatterns": [
         "package.json$",

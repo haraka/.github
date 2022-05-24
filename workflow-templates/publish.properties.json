@@ -1,6 +1,6 @@
 {
-    "name": "Haraka Lint",
-    "description": "Haraka Project Lint Workflow.",
+    "name": "Haraka Publish",
+    "description": "Haraka Project Publish Workflow.",
     "iconName": "haraka-icon",
     "categories": [
         "JavaScript"

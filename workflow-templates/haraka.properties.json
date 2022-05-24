@@ -3,7 +3,7 @@
     "description": "Haraka Project CI starter workflow.",
     "iconName": "haraka-icon",
     "categories": [
-        "js"
+        "JavaScript"
     ],
     "filePatterns": [
         "package.json$",
