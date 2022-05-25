@@ -10,5 +10,7 @@ env:
 
 jobs:
   publish:
+    # if needed, 'publish-redis.yml' is also available
     uses: haraka/.github/.github/workflows/publish.yml@master
     secrets: inherit
+
