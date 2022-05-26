@@ -7,6 +7,8 @@ on:
 env:
   CI: true
 
+# NOTE: coverage reporting does not work in Haraka plugins
+#       See: https://github.com/haraka/Haraka/issues/1800
 jobs:
   coverage:
     uses: haraka/.github/.github/workflows/coverage.yml@master
