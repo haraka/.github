@@ -2,10 +2,6 @@ name: publish
 
 on:
   workflow_call:
-    inputs:
-      redis:
-        required: false
-        type: boolean
 
 env:
   CI: true
@@ -15,7 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     services:
-      if: ${{ inputs.redis }}
       redis:
         image: redis
         ports:
