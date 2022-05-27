@@ -66,7 +66,7 @@ jobs:
         run: |
           echo "const fs = require('fs')" > gpr.js
           echo "const pkg = require('./package.json')" >> gpr.js
-          echo "pkg.name = `@haraka/\${pkg.name}`" >> gpr.js
+          echo "pkg.name = \`@haraka/\${pkg.name}\`" >> gpr.js
           echo "fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2))" >> gpr.js
           node gpr.js
       - run: npm publish
