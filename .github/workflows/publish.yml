@@ -49,19 +49,25 @@ jobs:
         uses: justincy/github-action-npm-release@2.0.1
         id: release
 
-  # publish-gpr:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 16
-  #         registry-url: https://npm.pkg.github.com/
-  #         scope: @haraka
-  #     - run: npm publish
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://npm.pkg.github.com/
+          scope: "@haraka"
+      - run: |
+          echo "const fs = require('fs')" > gpr.js
+          echo "const pkg = require('./package.json')" >> gpr.js
+          echo "pkg.name = `@haraka/${pkg.name}`" >> gpr.js
+          echo "fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2))" >> gpr.js
+      - run: node gpr.js
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
