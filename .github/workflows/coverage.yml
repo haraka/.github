@@ -22,9 +22,7 @@ jobs:
         node-version: ${{ env.node-version }}
 
     - uses: actions/checkout@v3
-
     - run: npm install
-
     - name: run coverage
       run: |
         npm install --no-save c8
