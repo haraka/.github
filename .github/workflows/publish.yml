@@ -24,27 +24,23 @@ jobs:
       - run: npm install
       - run: npm test
 
-
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    environment: npm
     steps:
       - uses: actions/setup-node@v3
         name: Node ${{ env.node-version }}
         with:
           node-version: ${{ env.node-version }}
           registry-url: https://registry.npmjs.org/
-
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          # fetch-depth 0 needed by GitHub Release
-
+          fetch-depth: 0    #  needed by GitHub Release
       - name: publish to NPM
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
       - name: GitHub Release
         uses: justincy/github-action-npm-release@2.0.1
         id: release
@@ -52,6 +48,7 @@ jobs:
   publish-gpr:
     needs: build
     runs-on: ubuntu-latest
+    environment: ghpm
     permissions:
       contents: read
       packages: write
@@ -59,16 +56,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.node-version }}
           registry-url: https://npm.pkg.github.com/
           scope: "@haraka"
       - name: rename package with @haraka scope
-        run: |
-          echo "const fs = require('fs')" > gpr.js
-          echo "const pkg = require('./package.json')" >> gpr.js
-          echo "pkg.name = \`@haraka/\${pkg.name}\`" >> gpr.js
-          echo "fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2))" >> gpr.js
-          node gpr.js
+        run: .release/npm/prepend-scope.js @haraka
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
