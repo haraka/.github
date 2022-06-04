@@ -45,3 +45,4 @@ jobs:
      outputs:
        active: ${{ steps.get.outputs.active }}
        lts:    ${{ steps.get.outputs.lts }}
+       min:    ${{ steps.get.outputs.min }}

@@ -18,7 +18,6 @@ jobs:
           - 6379:6379
     steps:
       - uses: actions/setup-node@v3
-        name: Node ${{ fromJson(needs.get-lts.outputs.min) }}
         with:
           node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
       - uses: actions/checkout@v3
@@ -31,7 +30,6 @@ jobs:
     environment: npm
     steps:
       - uses: actions/setup-node@v3
-        name: Node ${{ fromJson(needs.get-lts.outputs.min) }}
         with:
           node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
           registry-url: https://registry.npmjs.org/

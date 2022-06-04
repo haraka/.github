@@ -17,7 +17,6 @@ jobs:
           - 6379:6379
     steps:
     - uses: actions/setup-node@v3
-      name: Node ${{ fromJson(needs.get-lts.outputs.min) }}
       with:
         node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
 

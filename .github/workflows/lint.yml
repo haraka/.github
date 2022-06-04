@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/setup-node@v3
-      name: Node ${{ fromJson(needs.get-lts.outputs.min) }}
       with:
         node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
     - uses: actions/checkout@v3
