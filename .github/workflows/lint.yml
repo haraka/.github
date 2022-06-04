@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/setup-node@v3
       with:
-        node-version: lts/-1
+        node-version: lts/*
     - uses: actions/checkout@v3
     - run: npm install
     - run: npm run lint
