@@ -5,10 +5,10 @@ on:
 
 env:
   CI: true
+  node-version: 16
 
 jobs:
   coverage:
-    needs: get-lts
     runs-on: ubuntu-latest
     services:
       redis:
@@ -18,7 +18,8 @@ jobs:
     steps:
     - uses: actions/setup-node@v3
       with:
-        node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
+        node-version: ${{ env.node-version }}
+
 
     - uses: actions/checkout@v3
     - run: npm install
@@ -36,11 +37,3 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.github_token }}
-
-  get-lts:
-    runs-on: ubuntu-latest
-    steps:
-      - id: get
-        uses: msimerson/node-lts-versions@v1
-    outputs:
-      min: ${{ steps.get.outputs.min }}
