@@ -6,16 +6,24 @@ on:
 
 env:
   CI: true
-  node-version: 16
 
 jobs:
   lint:
+    needs: get-lts
     runs-on: ubuntu-latest
     steps:
     - uses: actions/setup-node@v3
-      name: Node ${{ env.node-version }}
+      name: Node ${{ fromJson(needs.get-lts.outputs.min) }}
       with:
-        node-version: ${{ env.node-version }}
+        node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
     - uses: actions/checkout@v3
     - run: npm install
     - run: npm run lint
+
+  get-lts:
+    runs-on: ubuntu-latest
+    steps:
+      - id: get
+        uses: msimerson/node-lts-versions@v1
+    outputs:
+      min: ${{ steps.get.outputs.min }}

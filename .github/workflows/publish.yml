@@ -9,6 +9,7 @@ env:
 
 jobs:
   build:
+    needs: get-lts
     runs-on: ubuntu-latest
     services:
       redis:
@@ -17,22 +18,22 @@ jobs:
           - 6379:6379
     steps:
       - uses: actions/setup-node@v3
-        name: Node ${{ env.node-version }}
+        name: Node ${{ fromJson(needs.get-lts.outputs.min) }}
         with:
-          node-version: ${{ env.node-version }}
+          node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
       - uses: actions/checkout@v3
       - run: npm install
       - run: npm test
 
   publish-npm:
-    needs: build
+    needs: [ build, get-lts ]
     runs-on: ubuntu-latest
     environment: npm
     steps:
       - uses: actions/setup-node@v3
-        name: Node ${{ env.node-version }}
+        name: Node ${{ fromJson(needs.get-lts.outputs.min) }}
         with:
-          node-version: ${{ env.node-version }}
+          node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
           registry-url: https://registry.npmjs.org/
       - uses: actions/checkout@v3
         with:
@@ -46,7 +47,7 @@ jobs:
         id: release
 
   publish-gpr:
-    needs: build
+    needs: [ build, get-lts ]
     runs-on: ubuntu-latest
     environment: ghpm
     permissions:
@@ -56,7 +57,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.node-version }}
+          node-version: ${{ fromJson(needs.get-lts.outputs.min) }}
           registry-url: https://npm.pkg.github.com/
           scope: "@haraka"
       - name: rename package with @haraka scope
@@ -64,3 +65,11 @@ jobs:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  get-lts:
+    runs-on: ubuntu-latest
+    steps:
+      - id: get
+        uses: msimerson/node-lts-versions@v1
+    outputs:
+      min: ${{ steps.get.outputs.min }}
