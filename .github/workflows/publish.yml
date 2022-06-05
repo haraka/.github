@@ -26,7 +26,6 @@ jobs:
   publish-npm:
     needs: [ build ]
     runs-on: ubuntu-latest
-    environment: npm
     steps:
       - uses: actions/setup-node@v3
         with:
@@ -46,7 +45,6 @@ jobs:
   publish-gpr:
     needs: [ build ]
     runs-on: ubuntu-latest
-    environment: ghpm
     permissions:
       contents: read
       packages: write
@@ -58,7 +56,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: "@haraka"
       - name: rename package with @haraka scope
-        run: .release/npm/prepend-scope.js @haraka
+        run: ./release/npm/prepend-scope.js @haraka
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
