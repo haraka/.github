@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.node-version }}
           registry-url: https://registry.npmjs.org/
       - uses: actions/checkout@v3
         with:
@@ -52,11 +52,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.node-version }}
           registry-url: https://npm.pkg.github.com/
           scope: "@haraka"
       - name: rename package with @haraka scope
-        run: ./release/npm/prepend-scope.js @haraka
+        run: node .release/npm/prepend-scope.js @haraka
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
