@@ -26,10 +26,11 @@ jobs:
   publish-npm:
     needs: [ build ]
     runs-on: ubuntu-latest
+    environment: npm
     steps:
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.node-version }}
           registry-url: https://registry.npmjs.org/
       - uses: actions/checkout@v3
         with:
@@ -38,25 +39,25 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-      - name: GitHub Release
-        uses: justincy/github-action-npm-release@2.0.1
-        id: release
 
   publish-gpr:
     needs: [ build ]
     runs-on: ubuntu-latest
+    environment: ghpm
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.node-version }}
           registry-url: https://npm.pkg.github.com/
           scope: "@haraka"
       - name: rename package with @haraka scope
-        run: ./release/npm/prepend-scope.js @haraka
+        run: node .release/npm/prepend-scope.cjs @haraka
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
