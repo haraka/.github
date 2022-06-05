@@ -54,8 +54,10 @@ jobs:
           node-version: ${{ env.node-version }}
           registry-url: https://npm.pkg.github.com/
           scope: "@haraka"
+      - run: ls .release
+      - run: ls .release/npm
       - name: rename package with @haraka scope
-        run: node ./.release/npm/prepend-scope.js @haraka
+        run: node .release/npm/prepend-scope.cjs @haraka
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
