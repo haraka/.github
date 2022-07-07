@@ -1,6 +1,7 @@
 name: CI
 
-on: [ push ]
+on:
+  workflow_call:
 
 env:
   CI: true
@@ -19,7 +20,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
-      name: Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
+      name: Node.js ${{ matrix.node-version }} on windows-latest
       with:
         node-version: ${{ matrix.node-version }}
 
@@ -47,7 +48,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
-      name: Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
+      name: Node.js ${{ matrix.node-version }} on windows-2019
       with:
         node-version: ${{ matrix.node-version }}
     - name: Update npm
