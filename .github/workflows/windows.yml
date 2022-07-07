@@ -7,7 +7,7 @@ env:
   CI: true
 
 jobs:
-  test-win-latest:
+  latest:
     needs: [ get-lts ]
 
     # no docker/images support on Windows (currently), so run w/o Redis
@@ -38,8 +38,8 @@ jobs:
     - run: npm install
     - run: npm run test
 
-  test-win-2019:
-    needs: [ test-win-latest, get-lts ]
+  w2019:
+    needs: [ latest, get-lts ]
     runs-on: windows-2019
     strategy:
       matrix:
