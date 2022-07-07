@@ -5,12 +5,11 @@ on:
 
 env:
   CI: true
-  os: ubuntu-latest
 
 jobs:
   ubuntu:
     needs: [ get-lts ]
-    runs-on: ${{ env.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
@@ -18,14 +17,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
-      name: Node ${{ matrix.node-version }} on ${{ env.os }}
+      name: Node ${{ matrix.node-version }} on ubuntu-latest
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
     - run: npm test
 
   get-lts:
-    runs-on: ${{ env.os }}
+    runs-on: ubuntu-latest
     steps:
       - id: get
         uses: msimerson/node-lts-versions@v1
