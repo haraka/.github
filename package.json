@@ -3,10 +3,10 @@
   "name": ".github",
   "license": "MIT",
   "description": "Shared GitHub workflows",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/haraka/.github",
   "engines": {
-    "node": ">= 14"
+    "node": ">= 18"
   },
   "scripts": {
     "test": ""
