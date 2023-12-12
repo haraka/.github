@@ -23,11 +23,6 @@ jobs:
       name: Node.js ${{ matrix.node-version }} on windows-latest
       with:
         node-version: ${{ matrix.node-version }}
-
-    # To address a node-gyp install issues in Windows starting in Node 16
-    # This should be temporary and hopefully should be removed in the future
-    - name: Install node-gyp (temp workaround)
-      run: npx node-gyp@^9.0.0 install
     - run: npm install
     - run: npm run test
 
@@ -44,8 +39,6 @@ jobs:
       name: Node.js ${{ matrix.node-version }} on windows-2019
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install node-gyp (temp workaround)
-      run: npx node-gyp@^9.0.0 install
     - run: npm install
     - run: npm run test
 
