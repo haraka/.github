@@ -15,20 +15,20 @@ jobs:
         ports:
           - 6379:6379
     steps:
-    - uses: actions/setup-node@v4
-    - uses: actions/checkout@v4
-    - run: npm install
-    - name: run coverage
-      run: |
-        npm install --no-save c8
-        npx c8 --reporter=lcov npm test
-      env:
-        NODE_ENV: cov
+      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - run: npm install
+      - name: run coverage
+        run: |
+          npm install --no-save c8
+          npx c8 --reporter=lcov npm test
+        env:
+          NODE_ENV: cov
 
-    - name: codecov
-      uses: codecov/codecov-action@v3
+      - name: codecov
+        uses: codecov/codecov-action@v3
 
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.github_token }}
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}

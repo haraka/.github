@@ -8,7 +8,7 @@ env:
 
 jobs:
   ubuntu:
-    needs: [ get-lts ]
+    needs: [get-lts]
     runs-on: ubuntu-latest
     services:
       redis:
@@ -20,13 +20,13 @@ jobs:
         node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
       fail-fast: false
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      name: Node ${{ matrix.node-version }} on ubuntu-latest
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm test
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        name: Node ${{ matrix.node-version }} on ubuntu-latest
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm test
 
   get-lts:
     runs-on: ubuntu-latest

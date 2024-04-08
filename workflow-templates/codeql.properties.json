@@ -1,12 +1,7 @@
 {
-    "name": "Haraka CodeQL",
-    "description": "Haraka Project CodeQL Workflow.",
-    "iconName": "haraka-icon",
-    "categories": [
-        "JavaScript"
-    ],
-    "filePatterns": [
-        "package.json$",
-        ".*\\.md$"
-    ]
+  "name": "Haraka CodeQL",
+  "description": "Haraka Project CodeQL Workflow.",
+  "iconName": "haraka-icon",
+  "categories": ["JavaScript"],
+  "filePatterns": ["package.json$", ".*\\.md$"]
 }

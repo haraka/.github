@@ -15,11 +15,11 @@ jobs:
     secrets: inherit
 
   ubuntu:
-    needs: [ lint ]
+    needs: [lint]
     uses: haraka/.github/.github/workflows/ubuntu.yml@master
 
   windows:
-    needs: [ lint ]
+    needs: [lint]
     uses: haraka/.github/.github/workflows/windows.yml@master
 
   # ubuntu:
@@ -44,11 +44,11 @@ jobs:
   #   - run: npm test
 
   get-lts:
-     runs-on: ubuntu-latest
-     steps:
-       - id: get
-         uses: msimerson/node-lts-versions@v1
-     outputs:
-       active: ${{ steps.get.outputs.active }}
-       lts:    ${{ steps.get.outputs.lts }}
-       min:    ${{ steps.get.outputs.min }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: get
+        uses: msimerson/node-lts-versions@v1
+    outputs:
+      active: ${{ steps.get.outputs.active }}
+      lts: ${{ steps.get.outputs.lts }}
+      min: ${{ steps.get.outputs.min }}
