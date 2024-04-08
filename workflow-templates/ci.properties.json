@@ -1,12 +1,7 @@
 {
-    "name": "Haraka CI",
-    "description": "Haraka CI Workflow including Lint, Coverage, and Testing.",
-    "iconName": "haraka-icon",
-    "categories": [
-        "JavaScript"
-    ],
-    "filePatterns": [
-        "package.json$",
-        ".*\\.md$"
-    ]
+  "name": "Haraka CI",
+  "description": "Haraka CI Workflow including Lint, Coverage, and Testing.",
+  "iconName": "haraka-icon",
+  "categories": ["JavaScript"],
+  "filePatterns": ["package.json$", ".*\\.md$"]
 }

@@ -8,21 +8,21 @@ env:
 
 jobs:
   latest:
-    needs: [ get-lts ]
+    needs: [get-lts]
     strategy:
       matrix:
-        os: [ windows-latest, windows-2019 ]
+        os: [windows-latest]
         node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
       fail-fast: false
-    runs-on:  ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      name: Node.js ${{ matrix.node-version }} on windows-latest
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run test
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        name: Node.js ${{ matrix.node-version }} on windows-latest
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run test
 
   get-lts:
     runs-on: ubuntu-latest
