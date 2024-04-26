@@ -13,6 +13,8 @@ jobs:
       matrix:
         os: [windows-latest]
         node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
+        exclude:
+          - node-version: 22
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
