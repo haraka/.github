@@ -20,6 +20,12 @@ jobs:
         node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
       fail-fast: false
     steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         name: Node ${{ matrix.node-version }} on ubuntu-latest
