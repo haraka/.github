@@ -5,6 +5,8 @@ on:
 
 env:
   CI: true
+  NODE_PENDING_DEPRECATION: 1
+  NODE_OPTIONS: --pending-deprecation --throw-deprecation --trace-warnings --trace-deprecation
 
 jobs:
   ubuntu:
