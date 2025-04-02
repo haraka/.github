@@ -37,9 +37,6 @@ jobs:
         ports:
           - 6379:6379
     steps:
-      env:
-        NODE_PENDING_DEPRECATION: 1
-        NODE_OPTIONS: --pending-deprecation --throw-deprecation --trace-warnings --trace-deprecation
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         name: Node ${{ matrix.node-version }} on ubuntu-latest
@@ -47,6 +44,9 @@ jobs:
           node-version: ${{ fromJson(needs.get-lts.outputs.current) }}
       - run: npm install
       - run: npm test
+        env:
+          NODE_PENDING_DEPRECATION: 1
+          NODE_OPTIONS: --pending-deprecation --throw-deprecation --trace-warnings --trace-deprecation
 
   get-lts:
     runs-on: ubuntu-latest
