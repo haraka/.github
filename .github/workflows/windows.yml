@@ -12,9 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
-        exclude:
-          - node-version: 22
+        node-version: ${{ fromJson(needs.get-lts.outputs.maintenance) }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -33,4 +31,7 @@ jobs:
         uses: msimerson/node-lts-versions@v1
     outputs:
       active: ${{ steps.get.outputs.active }}
+      maintenance: ${{ steps.get.outputs.maintenance }}
       lts: ${{ steps.get.outputs.lts }}
+      current: ${{ steps.get.outputs.current }}
+      min: ${{ steps.get.outputs.min }}
