@@ -28,7 +28,7 @@ jobs:
       - run: npm install
       - run: npm test
 
-  ubuntu-node-current:
+  node-current:
     needs: [get-lts]
     runs-on: ubuntu-latest
     services:
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: get
-        uses: msimerson/node-lts-versions@v1.7.0
+        uses: msimerson/node-lts-versions@v1
     outputs:
       active: ${{ steps.get.outputs.active }}
       maintenance: ${{ steps.get.outputs.maintenance }}
