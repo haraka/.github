@@ -60,7 +60,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
   create-release:
-    needs: [build]
+    needs: [build, version]
     runs-on: ubuntu-latest
     permissions:
       contents: write  # needed to create tags and releases
