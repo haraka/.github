@@ -7,7 +7,7 @@ env:
   CI: true
 
 permissions:
-  id-token: write   # required for OIDC
+  id-token: write # required for OIDC
   contents: read
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # last 2 commits
+          fetch-depth: 2 # last 2 commits
       - name: check version change
         id: check
         run: |
@@ -67,11 +67,11 @@ jobs:
     needs: [build, version]
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # needed to create tags and releases
+      contents: write # needed to create tags and releases
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # fetch all tags
+          fetch-depth: 0 # fetch all tags
       - id: tag-check
         run: |
           TAG="v${{ needs.version.outputs.version }}"
@@ -109,7 +109,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           registry-url: https://npm.pkg.github.com/
-          scope: "@haraka"
+          scope: '@haraka'
       - name: rename package with @haraka scope
         run: node .release/npm/prepend-scope.cjs @haraka
       - run: npm publish

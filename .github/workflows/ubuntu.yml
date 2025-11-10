@@ -62,4 +62,3 @@ jobs:
       lts: ${{ steps.get.outputs.lts }}
       current: ${{ steps.get.outputs.current }}
       min: ${{ steps.get.outputs.min }}
-
