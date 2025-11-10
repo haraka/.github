@@ -16,5 +16,9 @@
   "devDependencies": {},
   "bugs": {
     "url": "https://github.com/haraka/.github/issues"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false
   }
 }
