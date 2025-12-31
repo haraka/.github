@@ -60,9 +60,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - uses: actions/checkout@v4
       - name: publish to NPM
-        run: npm publish --access=public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: npm publish
 
   create-release:
     needs: [build, version]
