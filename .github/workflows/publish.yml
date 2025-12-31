@@ -8,7 +8,8 @@ env:
 
 permissions:
   id-token: write # required for OIDC
-  contents: read
+  contents: write # needed to create tags and releases
+  packages: write
 
 jobs:
   version:
