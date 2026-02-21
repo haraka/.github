@@ -20,8 +20,8 @@ jobs:
         node-version: ${{ fromJson(needs.get-lts.outputs.lts) }}
       fail-fast: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         name: Node ${{ matrix.node-version }} on ubuntu-latest
         with:
           node-version: ${{ matrix.node-version }}
@@ -40,8 +40,8 @@ jobs:
       matrix:
         node-version: ${{ fromJson(needs.get-lts.outputs.current) }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         name: Node ${{ matrix.node-version }} on ubuntu-latest
         with:
           node-version: ${{ matrix.node-version }}
