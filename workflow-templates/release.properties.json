@@ -1,0 +1,7 @@
+{
+  "name": "Haraka Release",
+  "description": "Haraka Release Workflow.",
+  "iconName": "haraka-icon",
+  "categories": ["JavaScript"],
+  "filePatterns": ["package.json$", ".*\\.md$"]
+}

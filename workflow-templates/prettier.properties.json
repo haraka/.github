@@ -1,0 +1,7 @@
+{
+  "name": "Haraka Prettier",
+  "description": "Haraka Prettier Workflow.",
+  "iconName": "haraka-icon",
+  "categories": ["JavaScript"],
+  "filePatterns": ["package.json$", ".*\\.md$"]
+}

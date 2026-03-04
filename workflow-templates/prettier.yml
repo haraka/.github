@@ -1,0 +1,8 @@
+name: Prettier
+
+on:
+  pull_request:
+
+jobs:
+  prettier:
+    uses: haraka/.github/.github/workflows/prettier.yml@main
