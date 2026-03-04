@@ -2,6 +2,7 @@ name: Prettier
 
 on:
   pull_request:
+    types: [opened, synchronized]
 
 jobs:
   prettier:

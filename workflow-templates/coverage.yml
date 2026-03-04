@@ -1,7 +1,8 @@
 name: Test Coverage
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronized]
 
 env:
   CI: true
