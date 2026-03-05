@@ -21,4 +21,4 @@ jobs:
           git config user.email "github-actions@github.com"
           git add -A
           git commit -m "style: format code with prettier" || echo "No changes to commit"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
