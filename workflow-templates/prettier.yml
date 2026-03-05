@@ -7,3 +7,5 @@ on:
 jobs:
   prettier:
     uses: haraka/.github/.github/workflows/prettier.yml@main
+    with:
+      branch: ${{ github.head_ref }}

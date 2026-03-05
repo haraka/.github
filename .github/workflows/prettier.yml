@@ -2,6 +2,10 @@ name: Prettier
 
 on:
   workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
 
 env:
   CI: true
@@ -13,11 +17,18 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
       - uses: actions/setup-node@v6
       - run: npx prettier . --write
       - run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add -A
-          git commit -m "style: format code with prettier" || echo "No changes to commit"
-          git push
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+            git add -A
+            git commit -m "style: format code with prettier" || echo "No changes to commit"
+            git push
+          else
+            echo "No formatting changes"
+          fi
