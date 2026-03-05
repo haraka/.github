@@ -50,7 +50,7 @@ jobs:
       - run: npm test
 
   create-release:
-    needs: build
+    needs: [build, version]
     runs-on: ubuntu-latest
     permissions:
       contents: write # needed to create tags and releases
