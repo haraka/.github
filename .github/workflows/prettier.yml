@@ -13,7 +13,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
-      - run: git checkout "${{ github.ref_name }}" || git checkout -b "${{ github.ref_name }}"
       - uses: actions/setup-node@v6
       - run: npx prettier . --write
       - run: |
