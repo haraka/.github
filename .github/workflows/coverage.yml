@@ -5,6 +5,8 @@ on:
 
 env:
   CI: true
+  NODE_ENV=cov
+  HARAKA_COVERAGE=1
 
 jobs:
   coverage:
@@ -22,8 +24,6 @@ jobs:
         run: |
           npm install --no-save c8
           npx c8 --reporter=lcov npm test
-        env:
-          NODE_ENV: cov
 
       - name: codecov
         uses: codecov/codecov-action@v5
