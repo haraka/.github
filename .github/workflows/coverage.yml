@@ -5,8 +5,8 @@ on:
 
 env:
   CI: true
-  NODE_ENV=cov
-  HARAKA_COVERAGE=1
+  NODE_ENV: cov
+  HARAKA_COVERAGE: 1
 
 jobs:
   coverage:
