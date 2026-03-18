@@ -9,7 +9,6 @@ env:
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
-    environment: npm
     permissions:
       contents: read
       id-token: write
@@ -23,7 +22,6 @@ jobs:
 
   publish-ghpr:
     runs-on: ubuntu-latest
-    environment: ghpm
     permissions:
       contents: read
       packages: write
@@ -36,7 +34,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@haraka'
       - name: rename package with @haraka scope
-        run: node .release/npm/prepend-scope.cjs @haraka
+        run: node .release/js/prepend-scope.cjs @haraka
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -24,6 +24,9 @@ npm test                              # Run full test suite
 node --test test/path/to/file.js      # Run a single test file (node:test packages)
 npx mocha test/path/to/file.js        # Run a single test file (mocha packages)
 
+# Test coverage
+npm run test:coverage                 # Run tests with coverage
+
 # In Haraka/ specifically:
 ./run_tests                           # Same as npm test
 ./run_tests test/plugins/bounce.js    # Single test file
@@ -44,30 +47,11 @@ npm run versions:fix                  # Update versions
 
 ### Plugin System
 
-Plugins are the primary extension mechanism. Every plugin exports a `register()` function that registers hooks:
-
-```javascript
-exports.register = function () {
-  this.load_my_ini()
-  this.register_hook('mail', 'check_sender')
-  this.register_hook('data_post', 'process_body', -5)  // negative = higher priority
-}
-
-exports.check_sender = function (next, connection) {
-  // connection.transaction, connection.remote, connection.loginfo(), etc.
-  next()           // continue
-  next(OK)         // explicit OK
-  next(DENY, 'reason')        // reject
-  next(DENYSOFT, 'reason')    // temporary failure
-  next(DENYDISCONNECT, 'msg') // reject + disconnect
-}
-```
-
-Hook lifecycle (in order): `init_master` → `init_child` → `connect` → `ehlo`/`helo` → `mail` → `rcpt` → `rcpt_ok` → `data` → `data_post` → `queue` → `disconnect`
+Plugins are the primary extension mechanism. Patterns and instructions for plugins are documented in ./Haraka/docs/Plugins.md.
 
 ### Config Loading
 
-Plugins load config via `this.config.get()`, which supports hot-reload:
+Config files are loaded via `config.get()`, which supports hot-reload:
 
 ```javascript
 exports.load_my_ini = function () {
@@ -105,10 +89,10 @@ const assert = require('node:assert/strict')
 const { beforeEach, describe, it } = require('node:test')
 const subject = require('../index')
 
-describe('feature', function () {
-  beforeEach(function () { /* setup */ })
+describe('feature', () => {
+  beforeEach(() => { /* setup */ })
 
-  it('does X', async function () {
+  it('does X', async () => {
     const result = await subject.doSomething()
     assert.deepEqual(result, expected)
   })
