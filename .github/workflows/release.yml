@@ -2,6 +2,13 @@ name: release
 
 on:
   workflow_call:
+    outputs:
+      changed:
+        description: Whether the package version changed
+        value: ${{ jobs.version.outputs.changed }}
+      version:
+        description: The package version from package.json
+        value: ${{ jobs.version.outputs.version }}
 
 env:
   CI: true
