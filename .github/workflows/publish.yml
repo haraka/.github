@@ -34,7 +34,6 @@ jobs:
         with:
           registry-url: https://npm.pkg.github.com/
           scope: '@haraka'
-      - run: npm ci || npm install
       - name: rename package with @haraka scope
         run: node .release/js/prepend-scope.cjs @haraka
       - run: npm publish
