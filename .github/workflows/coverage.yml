@@ -11,6 +11,8 @@ env:
 jobs:
   coverage:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     services:
       redis:
         image: redis
@@ -19,7 +21,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v6
       - uses: actions/checkout@v6
-      - run: npm install
+      - run: npm ci || npm install
       - name: run coverage
         run: |
           npm install --no-save c8

@@ -10,6 +10,8 @@ jobs:
   macos:
     needs: [get-lts]
     runs-on: macos-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         node-version: ${{ fromJson(needs.get-lts.outputs.lts) }}
@@ -24,11 +26,13 @@ jobs:
         run: |
           brew install redis
           brew services start redis
-      - run: npm install
+      - run: npm ci || npm install
       - run: npm test
 
   get-lts:
     runs-on: macos-latest
+    permissions:
+      contents: read
     steps:
       - id: get
         uses: msimerson/node-lts-versions@v1

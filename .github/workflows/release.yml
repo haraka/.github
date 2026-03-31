@@ -53,7 +53,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v6
       - uses: actions/checkout@v6
-      - run: npm install
+      - run: npm ci || npm install
       - run: npm test
 
   create-release:

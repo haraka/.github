@@ -15,18 +15,22 @@ jobs:
         node-version: ${{ fromJson(needs.get-lts.outputs.lts) }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         name: Node.js ${{ matrix.node-version }} on windows-latest
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install
+      - run: npm ci || npm install
       - run: npm run test
         continue-on-error: ${{ matrix.node-version == '20' }}
 
   get-lts:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - id: get
         uses: msimerson/node-lts-versions@v1

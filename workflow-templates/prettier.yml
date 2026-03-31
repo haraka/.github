@@ -2,10 +2,10 @@ name: Prettier
 
 on:
   pull_request:
-    types: [opened, synchronized]
+    types: [opened, synchronize]
 
 jobs:
   prettier:
-    uses: haraka/.github/.github/workflows/prettier.yml@main
+    uses: haraka/.github/.github/workflows/prettier.yml@master
     with:
       branch: ${{ github.head_ref }}
