@@ -9,3 +9,5 @@ jobs:
     uses: haraka/.github/.github/workflows/prettier.yml@master
     with:
       branch: ${{ github.head_ref }}
+    permissions:
+      contents: write

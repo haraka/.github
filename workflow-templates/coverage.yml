@@ -13,3 +13,5 @@ jobs:
   coverage:
     uses: haraka/.github/.github/workflows/coverage.yml@master
     secrets: inherit
+    permissions:
+      contents: read
