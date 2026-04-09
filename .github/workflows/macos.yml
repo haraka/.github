@@ -14,7 +14,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        node-version: ${{ fromJson(needs.get-lts.outputs.lts) }}
+        node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
       fail-fast: false
     steps:
       - uses: actions/checkout@v6
