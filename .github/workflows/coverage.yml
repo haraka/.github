@@ -21,11 +21,10 @@ jobs:
     steps:
       - uses: actions/setup-node@v6
       - uses: actions/checkout@v6
-      - run: npm ci || npm install
-      - name: run coverage
-        run: |
-          npm install --no-save c8
-          npx c8 --reporter=lcov npm test
+      - name: install
+        run: npm ci || npm install
+      - name: coverage
+        run: npm run test:coverage:lcov || (npm install --no-save c8 && npx c8 --reporter=lcov npm test)
 
       - name: codecov
         uses: codecov/codecov-action@v5
