@@ -7,7 +7,7 @@ This is the **Haraka** monorepo — a highly scalable Node.js SMTP email server 
 **Main packages:**
 - `Haraka/` – Core SMTP server
 - `plugin/` – 40+ optional plugins (bounce, dkim, spf, rspamd, relay, karma, etc.)
-- `address-rfc2821/`, `address-rfc2822/` – RFC-compliant email address parsers
+- `email-address/` – `@haraka/email-address`, the merged RFC 5321/5322 parser (supersedes the legacy `address-rfc2821/` and `address-rfc2822/`, which are deprecated)
 - `haraka-config/` – Config file loader with hot-reload support
 - `results/`, `notes/` – Per-connection result and note tracking
 - `net-utils/`, `utils/`, `constants/`, `dsn/`, `tld/` – Shared utility libraries
@@ -115,6 +115,16 @@ describe('feature', function () {
 The key difference: `node:test` requires explicitly importing `describe`/`it`/`beforeEach` etc. from `'node:test'`. Use `node:assert` and `node:` prefixes for builtins. Avoid `done` callbacks — use `async`/`await` instead.
 
 Common test dependencies: `haraka-test-fixtures`, `sinon`, `mock-require`.
+
+### Standard test scripts (node:test packages only)
+
+Packages whose `npm test` already runs `node --test` (or Haraka's `./run_tests`) should expose all three of:
+
+```jsonc
+"test": "node --test",
+"test:coverage": "node --test --experimental-test-coverage",
+"test:coverage:lcov": "mkdir -p coverage && node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov.info"
+```
 
 ### Plugin Package Layout
 

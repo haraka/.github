@@ -33,3 +33,9 @@ jobs:
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2
+
+      - uses: qltysh/qlty-action/coverage@v2
+        with:
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          # oidc: true
+          files: coverage/lcov.info
