@@ -1,3 +1,5 @@
+<!-- agents-version: 1 -->
+
 # AGENTS.md
 
 Shared instructions for every coding agent in this repo. The tool-specific files
