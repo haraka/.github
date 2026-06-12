@@ -6,11 +6,12 @@ on:
 env:
   CI: true
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/setup-node@v6
       - uses: actions/checkout@v6

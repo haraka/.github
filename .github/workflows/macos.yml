@@ -6,12 +6,13 @@ on:
 env:
   CI: true
 
+permissions:
+  contents: read
+
 jobs:
   macos:
     needs: [get-lts]
     runs-on: macos-latest
-    permissions:
-      contents: read
     strategy:
       matrix:
         node-version: ${{ fromJson(needs.get-lts.outputs.active) }}
@@ -31,8 +32,6 @@ jobs:
 
   get-lts:
     runs-on: macos-latest
-    permissions:
-      contents: read
     steps:
       - id: get
         uses: msimerson/node-lts-versions@v1
