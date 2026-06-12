@@ -62,11 +62,11 @@ jobs:
             exit 0
           fi
           cp /tmp/agents.md AGENTS.md
-          printf 'see AGENTS.md\n' | tee CLAUDE.md GEMINI.md >/dev/null
+          printf 'see AGENTS.md\n' | tee CLAUDE.md >/dev/null
           mkdir -p .github
           cp /tmp/agents.md .github/copilot-instructions.md
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add AGENTS.md CLAUDE.md GEMINI.md .github/copilot-instructions.md
+          git add AGENTS.md CLAUDE.md .github/copilot-instructions.md
           git commit -m "docs: sync AGENTS.md to v$cv from haraka/.github" || echo "No changes to commit"
           git push
