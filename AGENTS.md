@@ -3,7 +3,7 @@
 # AGENTS.md
 
 Shared instructions for every coding agent in this repo. The tool-specific files
-(`CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`) defer to this one.
+(`CLAUDE.md`, `.github/copilot-instructions.md`) defer to this one.
 If a package-level instruction file exists, it is authoritative for that package.
 
 ## Repository model
