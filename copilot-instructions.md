@@ -1,149 +1,97 @@
-# Haraka Monorepo – Copilot Instructions
+# AGENTS.md
 
-## Repository Overview
+Shared instructions for every coding agent in this repo. The tool-specific files
+(`CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`) defer to this one.
+If a package-level instruction file exists, it is authoritative for that package.
 
-This is the **Haraka** monorepo — a highly scalable Node.js SMTP email server ecosystem. Each subdirectory is an independent npm package with its own `package.json`, tests, and version history. There is no root `package.json`; packages are not linked via npm workspaces.
+## Repository model
 
-**Main packages:**
-- `Haraka/` – Core SMTP server
-- `plugin/` – 40+ optional plugins (bounce, dkim, spf, rspamd, relay, karma, etc.)
-- `email-address/` – `@haraka/email-address`, the merged RFC 5321/5322 parser (supersedes the legacy `address-rfc2821/` and `address-rfc2822/`, which are deprecated)
-- `haraka-config/` – Config file loader with hot-reload support
-- `results/`, `notes/` – Per-connection result and note tracking
-- `net-utils/`, `utils/`, `constants/`, `dsn/`, `tld/` – Shared utility libraries
-- `eslint/` – Shared ESLint config (`@haraka/eslint-config`)
-- `test-fixtures/` – Shared test fixtures (`haraka-test-fixtures`)
+- A monorepo of independent npm packages — each has its own `package.json`, tests, and version history. There is no root workspace and no root test runner. Run every command from the target package directory.
+- Package map:
+  - `Haraka/` — core SMTP server (has `./run_tests`).
+  - `plugin/*` — 40+ optional plugins (`haraka-plugin-<name>`); plugins may depend on each other (e.g. bounce → spf).
+  - `haraka-config/` — config loader with hot-reload.
+  - `results/`, `notes/` — per-connection result / note tracking.
+  - `net-utils/`, `utils/`, `constants/`, `dsn/`, `tld/`, `message-stream/` — shared libraries.
+  - `email-address/` — `@haraka/email-address`, the RFC 5321/5322 parser (supersedes the deprecated `address-rfc282x`).
+  - `eslint/` — `@haraka/eslint-config`
+  - `test-fixtures/` — `haraka-test-fixtures`.
 
-## Commands
+## Working agreement
 
-All commands are run from within the relevant package directory (e.g., `cd Haraka`).
+- Do only what was asked. When you spot an adjacent bug or smell, surface it and ask before expanding scope — don't silently refactor, but don't ignore it either.
+- Preserve compatibility; break it only for an explicit, stated reason.
+- For protocol behavior, identify the relevant RFC and verify conformance against the existing implementation.
 
-```bash
-# Test
-npm test                              # Run full test suite
-node --test test/path/to/file.js      # Run a single test file (node:test packages)
-npx mocha test/path/to/file.js        # Run a single test file (mocha packages)
+## Source control
 
-# Test coverage
-npm run test:coverage                 # Run tests with coverage
+- Never run history- or remote-mutating commands (`git commit`, `git push`, `git tag`, `gh pr create`) unless explicitly asked. Stage diffs; the human reviews, commits, and pushes.
+- Propose a commit message in Conventional Commit format, imperative mood.
+- Update `CHANGELOG.md` under `### Unreleased`: one terse clause per change, least markup. Rationale belongs in the code or PR, not the bullet.
 
-# In Haraka/ specifically:
-./run_tests                           # Same as npm test
-./run_tests test/plugins/bounce.js    # Single test file
+## Coding standards
 
-# Lint & format
-npm run lint                          # ESLint check
-npm run lint:fix                      # Auto-fix lint issues
-npm run prettier                      # Check formatting
-npm run prettier:fix                  # Auto-format
-npm run format                        # prettier:fix + lint:fix (run before committing)
+- Target current Node LTS; prefer ES2024 over legacy patterns.
+- Existing code is CommonJS (`require`/`exports`) — match it. New modules should use ESM with CJS interop (see `@haraka/email-address`).
+- Add `node:` prefixes to built-in requires in any file you touch (`require('fs')` → `require('node:fs')`).
+- Prefer: promise APIs (`fs/promises`), `for...of`/`for...in` over `forEach`, `node:readline` for line parsing, template literals over concatenation, `true`/`false` over `1`/`0`, and guard-style early returns.
+- Remove commented-out code (it lives in git history). `npm run qlty` must pass without warnings.
 
-# Dependency version management
-npm run versions                      # Check for version drift
-npm run versions:fix                  # Update versions
-```
+## Comments
 
-## Architecture
+- Prefer self-documenting code: a better name beats a comment.
+- Keep only WHY comments — a hidden constraint, an invariant, a workaround for a specific bug, or an RFC citation that explains otherwise-surprising behavior.
+- Delete WHAT comments that restate the code, and comments that narrate history or audit findings. If a rename makes a comment redundant, delete it rather than updating it.
 
-### Plugin System
+## Haraka plugins (`plugin/*`)
 
-Plugins are the primary extension mechanism. Patterns and instructions for plugins are documented in ./Haraka/docs/Plugins.md.
+- Full hook/API reference: `Haraka/docs/Plugins.md`.
+- A plugin is an npm package: `index.js` (`exports.register` + hook handlers), `config/` (default `.ini`/`.json`/`.yaml`), `test/`, `README.md`.
+- Register hooks in `exports.register` with `this.register_hook('phase', 'method'[, priority])`.
+- Hook handlers take `(next, connection)` (rcpt hooks also take `rcpt`) and must call `next` exactly once. Gate early — return `next()` on missing transaction, disabled config, or skip conditions. Signal a verdict with `next(DENY|DENYSOFT|OK, msg)`; `DENY`/`OK`/etc. are plugin-scope globals (no import).
+- Results: `connection.transaction.results.add(this, { pass|fail|skip|msg|err, emit })`; query with `results.has(plugin, list, search)`. `emit: true` already logs the collated line — don't also `loginfo`/`logerror` the same thing. results.add(this, {err}) always logs.
+- Config loads via `config.get` with a hot-reload callback; declare every boolean or it stays a string and `=== true/false` silently fails:
+  ```js
+  this.cfg = this.config.get('name.ini', { booleans: ['+a.b', '-c.d'] }, () => this.load())
+  ```
+- Keep handlers thin. Push pure decision logic and I/O into `lib/*.js` as pure functions that return a verdict/value; the handler just maps that to `results.add` + `next`. For external I/O (DNS, network), expose an injectable seam — a swappable function whose default is the real implementation — so tests run without mocks.
+- If you add files outside `index.js` (e.g. a `lib/` dir), add them to `package.json` `files` so they publish.
 
-### Config Loading
+## Testing
 
-Config files are loaded via `config.get()`, which supports hot-reload:
+- Test real behavior and observable outcomes — `results`, return codes, emitted headers, side effects — not how a function was called. Asserting call shape (`calledWith`, arity, call counts) tests the test and hides signature drift.
+- Mocks/stubs are a smell. Prefer real inputs; when you must isolate a dependency, inject a seam and assert the outcome. Never leave a stub that neuters the path under test — that yields green tests proving nothing.
+- For bug fixes, add a failing test first, then fix.
+- Every feature ships with meaningful tests. A `.skip` is a coverage hole: fix it or delete it.
+- Use `node:test` and `node:assert/strict` for new tests and Mocha migrations. Plugin tests use `haraka-test-fixtures` (`makePlugin`, `makeConnection`, `callHook`).
+- Run the package's `lint`, `prettier`, and `format` before handoff.
 
-```javascript
-exports.load_my_ini = function () {
-  this.cfg = this.config.get('plugin-name.ini', {
-    booleans: ['+feature.enabled', '-feature.other'],
-  }, () => { this.load_my_ini() })  // callback re-runs on file change
-}
-```
+## Commands (run inside the target package)
 
-### Inter-Package Dependencies
+- Test: `npm test`. Single file: `node --test test/path/to/file.js`.
+- Haraka core: `cd Haraka && ./run_tests [test/plugins/foo.js]`.
+- Coverage: `npm run test:coverage`; lcov: `npm run test:coverage:lcov`. Keep coverage at/above ~90%.
+- If coverage output includes non-source files (e.g. `package.json`, `test/*`), scope it with `--test-coverage-include` (preferred when the list is short) or `--test-coverage-exclude`.
+- Lint/format: `npm run lint` / `prettier` / `format`. Version drift: `npm run versions[:fix]`.
 
-Utility packages (`haraka-utils`, `haraka-net-utils`, `haraka-constants`, etc.) are standalone and imported via `require()` by both `Haraka/` and plugins. Plugins sometimes depend on each other (e.g., `haraka-plugin-bounce` depends on `haraka-plugin-spf`).
+## Package script parity
 
-## Conventions
+- node:test packages should expose `test`, `test:coverage`, `test:coverage:lcov`, `lint`, `prettier`, `format` with matching shapes across siblings. Standardize on node:test coverage (not c8); add the canonical scripts when touching a package that lacks them:
+  ```jsonc
+  "test:coverage": "node --test --experimental-test-coverage",
+  "test:coverage:lcov": "mkdir -p coverage && node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov.info"
+  ```
 
-### Module Format
+## Repo badges
 
-All code uses **CommonJS** (`require` / `module.exports` / `exports`).
-
-### Code Style (enforced by ESLint + Prettier)
-
-- use prettier
-- `true`/`false` instead of `1`/`0`
-- Prefer template literals over string concatenation
-- Remove commented-out code; it lives in git history
-- When updating files, add `node:` prefixes to any Node.js built-in `require()` calls that lack them (e.g. `require('fs')` → `require('node:fs')`)
-
-### Test Structure
-
-The codebase is **migrating from Mocha to `node:test`**. New tests should use `node:test`. Many existing tests still use Mocha — updating them to be more compatible is welcome.
-
-**New style (`node:test`):**
-```javascript
-const assert = require('node:assert/strict')
-const { beforeEach, describe, it } = require('node:test')
-const subject = require('../index')
-
-describe('feature', () => {
-  beforeEach(() => { /* setup */ })
-
-  it('does X', async () => {
-    const result = await subject.doSomething()
-    assert.deepEqual(result, expected)
-  })
-})
-```
-
-**Old style (Mocha — still present in many packages):**
-```javascript
-const assert = require('assert')
-const subject = require('../index')
-
-describe('feature', function () {
-  it('does X', function (done) {
-    assert.equal(subject.doSomething(), expected)
-    done()
-  })
-})
-```
-
-The key difference: `node:test` requires explicitly importing `describe`/`it`/`beforeEach` etc. from `'node:test'`. Use `node:assert` and `node:` prefixes for builtins. Avoid `done` callbacks — use `async`/`await` instead.
-
-Common test dependencies: `haraka-test-fixtures`, `sinon`, `mock-require`.
-
-### Standard test scripts (node:test packages only)
-
-Packages whose `npm test` already runs `node --test` (or Haraka's `./run_tests`) should expose all three of:
-
-```jsonc
-"test": "node --test",
-"test:coverage": "node --test --experimental-test-coverage",
-"test:coverage:lcov": "mkdir -p coverage && node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov.info"
-```
-
-### Plugin Package Layout
-
-```
-plugin/my-plugin/
-├── index.js          # Plugin code (exports.register + hook handlers)
-├── package.json      # { "name": "haraka-plugin-my-plugin", "main": "index.js" }
-├── config/           # Default config files (.ini, .yaml, .json)
-├── test/
-│   └── index.js
-└── README.md
-```
-
-### Utility Package Layout
-
-```
-my-util/
-├── index.js          # Functional exports or class export
-├── package.json      # { "name": "haraka-my-util" }
-└── test/
-    └── index.js
-```
+- Code climate is deprecated. Update with qlty.sh instead.
+- The canonical format for badges should be:
+  - Top of README.md:
+    - [![Test][ci-img]][ci-url] [![Cover][cov-img]][cov-url] [![Qlty][qlty-img]][qlty-url]
+  - Bottom of README.md:
+    - [ci-img]: https://github.com/haraka/<name>/actions/workflows/ci.yml/badge.svg
+    - [ci-url]: https://github.com/haraka/<name>/actions/workflows/ci.yml
+    - [cov-img]: https://codecov.io/github/haraka/<name>/coverage.svg
+    - [cov-url]: https://codecov.io/github/haraka/<name>
+    - [qlty-img]: https://qlty.sh/gh/haraka/projects/<name>/maintainability.svg
+    - [qlty-url]: https://qlty.sh/gh/haraka/projects/<name>
